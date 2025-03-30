@@ -1,0 +1,143 @@
+import pandas as pd
+import geopandas as gpd
+
+# Example: Reading species occurrence data (replace with your actual data source)
+try:
+    species_data = pd.read_csv("species_occurrences_karnataka.csv")
+    print("Species data loaded successfully.")
+    print(species_data.head())
+except FileNotFoundError:
+    print("Error: species_occurrences_karnataka.csv not found.")
+
+# Example: Reading habitat map (assuming GeoJSON format)
+try:
+    habitat_map = gpd.read_file("habitat_map_karnataka.geojson")
+    print("\nHabitat map loaded successfully.")
+    print(habitat_map.head())
+except FileNotFoundError:
+    print("Error: habitat_map_karnataka.geojson not found.")
+
+# Example: Reading protected area boundaries
+try:
+    protected_areas = gpd.read_file("protected_areas_karnataka.geojson")
+    print("\nProtected areas loaded successfully.")
+    print(protected_areas.head())
+except FileNotFoundError:
+    print("Error: protected_areas_karnataka.geojson not found.")
+
+# Example: Reading solar irradiance data (replace with your data)
+try:
+    solar_data = pd.read_csv("solar_irradiance_karnataka.csv")
+    print("\nSolar data loaded successfully.")
+    print(solar_data.head())
+except FileNotFoundError:
+    print("Error: solar_irradiance_karnataka.csv not found.")
+
+# Example: Reading wind data (replace with your data)
+try:
+    wind_data = pd.read_csv("wind_data_karnataka.csv")
+    print("\nWind data loaded successfully.")
+    print(wind_data.head())
+except FileNotFoundError:
+    print("Error: wind_data_karnataka.csv not found.")
+
+# Example: Reading land use data
+try:
+    land_use = gpd.read_file("land_use_karnataka.geojson")
+    print("\nLand use data loaded successfully.")
+    print(land_use.head())
+except FileNotFoundError:
+    print("Error: land_use_karnataka.geojson not found.")
+
+# Example: Basic data cleaning (handling missing values)
+species_data.dropna(subset=['latitude', 'longitude'], inplace=True)
+
+# Example: Spatial join (finding species within certain habitats)
+species_gdf = gpd.GeoDataFrame(species_data, geometry=gpd.points_from_xy(species_data.longitude, species_data.latitude), crs="EPSG:4326")
+species_in_habitat = gpd.sjoin(species_gdf, habitat_map, how="inner", predicate="within")
+print("\nSpecies found within defined habitats:")
+print(species_in_habitat.head())
+
+# Example: Simple habitat diversity index (Shannon index - requires counts of different habitat types)
+# Assuming 'habitat_map' has a 'habitat_type' column
+habitat_counts = habitat_map['habitat_type'].value_counts()
+total_area = habitat_counts.sum()
+proportions = habitat_counts / total_area
+shannon_index = - (proportions * np.log(proportions)).sum()
+print(f"\nShannon Diversity Index: {shannon_index}")
+
+# Example: Identifying areas with high solar potential (conceptual - needs more detailed analysis)
+high_solar_potential = solar_data[solar_data['average_irradiance_kWh_m2'] > threshold]
+
+# Example using DEAP (very simplified conceptual outline):
+from deap import base, creator, tools, algorithms
+import numpy as np
+import random
+
+# Create a fitness function with two objectives (maximize both)
+creator.create("FitnessMulti", base.Fitness, weights=(1.0, 1.0))
+creator.create("Individual", list, fitness=creator.FitnessMulti)
+
+toolbox = base.Toolbox()
+# Assume 'n_decision_variables' is the number of spatial units or decisions
+toolbox.register("attr_float", random.random)
+toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_float, n=n_decision_variables)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
+def evaluate(individual):
+    # This function needs to:
+    # 1. Interpret the 'individual' (the decision variables).
+    # 2. Use your data and potentially predictive models to calculate:
+    #    - Biodiversity score for the resulting configuration.
+    #    - Renewable energy generated for the resulting configuration.
+    biodiversity_score = np.sum(individual[:n_decision_variables//2]) # Placeholder
+    renewable_energy = np.sum(individual[n_decision_variables//2:]) # Placeholder
+    return biodiversity_score, renewable_energy
+
+toolbox.register("evaluate", evaluate)
+toolbox.register("mate", tools.cxTwoPoint)
+toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.1, indpb=0.1)
+toolbox.register("select", tools.selNSGA2) # Non-dominated sorting genetic algorithm
+
+population = toolbox.population(n=100)
+NGEN = 50
+for gen in range(NGEN):
+    offspring = algorithms.varAnd(population, toolbox, cxpb=0.7, mutpb=0.2)
+    fits = toolbox.map(toolbox.evaluate, offspring)
+    for fit, ind in zip(fits, offspring):
+        ind.fitness.values = fit
+    population = toolbox.select(offspring, k=len(population))
+
+# The 'population' now contains a set of optimized solutions (the Pareto front)
+print("\nOptimization complete. Pareto front (first 10 solutions):")
+for ind in population[:10]:
+    print(ind.fitness.values, ind)
+
+import matplotlib.pyplot as plt
+
+# Assuming 'population' from DEAP contains the Pareto front
+biodiversity_scores = [ind.fitness.values[0] for ind in population]
+renewable_energy_generated = [ind.fitness.values[1] for ind in population]
+
+plt.scatter(biodiversity_scores, renewable_energy_generated)
+plt.xlabel("Biodiversity Score")
+plt.ylabel("Renewable Energy Generated")
+plt.title("Pareto Front: Biodiversity vs. Renewable Energy")
+plt.grid(True)
+plt.show()
+
+
+# Example (Conceptual): Assuming each element in 'individual' corresponds to a grid cell
+# and its value indicates land use (e.g., 0 for conservation, 1 for solar)
+import matplotlib.pyplot as plt
+import numpy as np
+
+best_individual = population[0] # Example: Take the first solution from the Pareto front
+land_use_map = np.array(best_individual).reshape(grid_rows, grid_cols) # Reshape to your region's grid
+
+plt.imshow(land_use_map, cmap='viridis') # Or a custom colormap
+plt.title("Optimal Land Use Allocation")
+plt.colorbar(label="Land Use Type")
+plt.show()
+
+# For more complex visualizations, you would integrate with your geospatial data.
