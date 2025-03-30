@@ -73,10 +73,15 @@ Urban environments face increasing challenges due to climate variability, pollut
 4. Outcome
    
       I. Annual sunshine hours, peak sun hours, and solar viability score
+   
       II. Wind potential rating (1-5 scale) and optimal turbine placement suggestions
+   
       III. Percentage of green cover, Tree canopy density map, Biodiversity hotspot identification
+   
       IV. AQI prediction and pollution source attribution
+   
       V. Customized renewable energy recommendations with feasibility scores
+   
       VI. Website-based AI insights for urban planners and policymakers.
 
    
