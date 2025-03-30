@@ -81,8 +81,14 @@ Urban environments face increasing challenges due to climate variability, pollut
       IV. AQI prediction and pollution source attribution
    
       V. Customized renewable energy recommendations with feasibility scores
-   
+
       VI. Website-based AI insights for urban planners and policymakers.
+
+
+6. Requirements
+
+      pip install pandas, numpy, flask, scikit-learn, joblib, requests, matplotlib, seaborn, plotly
+   
 
    
    
