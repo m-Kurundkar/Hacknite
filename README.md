@@ -84,8 +84,8 @@ Urban environments face increasing challenges due to climate variability, pollut
 
       VI. Website-based AI insights for urban planners and policymakers.
 
-
-6. Requirements
+#
+5. Requirements
 
       pip install pandas, numpy, flask, scikit-learn, joblib, requests, matplotlib, seaborn, plotly
    
