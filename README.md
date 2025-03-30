@@ -1,5 +1,5 @@
 OUR FINAL PROJECT :- 
-PROJECT PROTOTYPE :- https://singular-beijinho-42fe07.netlify.app
+FRONTEND PROTOTYPE :- https://singular-beijinho-42fe07.netlify.app
 
 # Hacknite
 CODEBYTE'S PROJECT FOR HACKNITE
