@@ -1,4 +1,5 @@
-OUR FINAL PROJECT :- https://singular-beijinho-42fe07.netlify.app
+OUR FINAL PROJECT :- 
+PROJECT PROTOTYPE :- https://singular-beijinho-42fe07.netlify.app
 
 # Hacknite
 CODEBYTE'S PROJECT FOR HACKNITE
@@ -19,7 +20,7 @@ Urban environments face increasing challenges due to climate variability, pollut
 1. Data Collection & Processing:
    We used datasets from Kaggle, focusing on three primary sources:
 
-     a) Rainfall in India 1901-2015.csv
+  I. a) Rainfall in India 1901-2015.csv
 
         Used for historical analysis and AI-driven prediction for 2016-2025.
         Cities selected: Delhi, Chennai, and Bengaluru (due to data availability).
@@ -36,6 +37,8 @@ Urban environments face increasing challenges due to climate variability, pollut
 
         Provided monthly average sunshine for global cities (1961-1990)
         AI-driven sunshine forecasts for 2015-2025.
+  
+  II. Merging the above datasets to obtain "FINAL_DATASET.csv" using pandas.
 
 2. Decision-Making AI (Bolt-Powered)
      Our AI provides actionable recommendations, including:
